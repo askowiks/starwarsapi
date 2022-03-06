@@ -20,7 +20,8 @@ public class RebelsService {
     }
 
     public Rebel createRebel(RebelRequest rebelRequest){
-        Rebel rebel = Rebel.of(rebelRequest);
+//        Rebel rebel = Rebel.of(rebelRequest);
+        Rebel rebel = new Rebel(rebelRequest);
         rebelsRepository.save(rebel);
         return rebel;
     }
