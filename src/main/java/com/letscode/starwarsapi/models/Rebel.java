@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "rebels_db")
+//@Table(name = "rebels_db")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +27,9 @@ public class Rebel {
     @OneToMany(mappedBy = "rebel", cascade = CascadeType.ALL)
     List<Equipment> equipments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "rebelLocalization", cascade = CascadeType.ALL)
+    List<Localization> localizations;
+
     public static Rebel of(RebelRequest rebelRequest){
         Rebel rebel = new Rebel();
         BeanUtils.copyProperties(rebelRequest,rebel);
@@ -39,6 +42,9 @@ public class Rebel {
         gender = rebelRequest.getGender();
         equipments = rebelRequest.getEquipmentsRequest()
                 .stream().map(equipmentRequest -> new Equipment(equipmentRequest,this))
+                .collect(Collectors.toList());
+        localizations = rebelRequest.getLocalizationRequestList()
+                .stream().map(localization -> new Localization(localization,this))
                 .collect(Collectors.toList());
     }
 }
