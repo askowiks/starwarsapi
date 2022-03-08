@@ -1,5 +1,8 @@
 package com.letscode.starwarsapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
@@ -7,6 +10,8 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Localization {
 
     @Id
@@ -18,6 +23,7 @@ public class Localization {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "rebel_id", referencedColumnName = "id")
     private Rebel rebelLocalization;
 
