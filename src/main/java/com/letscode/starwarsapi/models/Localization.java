@@ -33,6 +33,15 @@ public class Localization {
         return localization;
     }
 
+    public LocalizationDTO toDto(){
+        return LocalizationDTO.builder()
+                .id(id)
+                .latitude(latitude)
+                .longitude(longitude)
+                .name(name)
+                .build();
+    }
+
     public Localization(LocalizationRequest localizationRequest, Rebel rebel){
         latitude = localizationRequest.getLatitude();
         longitude = localizationRequest.getLongitude();

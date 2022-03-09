@@ -33,6 +33,14 @@ public class Equipment {
         return equipment;
     }
 
+    public  EquipmentDTO toDto(){
+        return EquipmentDTO.builder()
+                .id(id)
+                .name(name)
+                .quantity(quantity)
+                .build();
+    }
+
     public Equipment(EquipmentRequest equipmentRequest, Rebel rebel){
         name = equipmentRequest.getName();
         quantity = equipmentRequest.getQuantity();

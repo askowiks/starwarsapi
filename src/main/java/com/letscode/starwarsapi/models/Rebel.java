@@ -36,6 +36,18 @@ public class Rebel {
         return rebel;
     }
 
+    public RebelDTO toDto(){
+        return RebelDTO.builder()
+                .id(id)
+                .name(name)
+                .age(age)
+                .gender(gender)
+                .equipmentDTOList(equipments.stream()
+                        .map(equipment -> equipment.toDto()).collect(Collectors.toList()))
+                .lastLocalization(localizations.get(localizations.size()-1).toDto()) //Repensar a obtencao do indice
+                .build();
+    }
+
     public Rebel(RebelRequest rebelRequest){
         name = rebelRequest.getName();
         age = rebelRequest.getAge();
