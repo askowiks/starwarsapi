@@ -24,6 +24,9 @@ public class Rebel {
     private Integer age;
     private String gender;
 
+    private Integer qntAccusation;
+    private Boolean isTraitor;
+
     @OneToMany(mappedBy = "rebel", cascade = CascadeType.ALL)
     List<Equipment> equipments = new ArrayList<>();
 
@@ -42,6 +45,8 @@ public class Rebel {
                 .name(name)
                 .age(age)
                 .gender(gender)
+                .qntAccusation(qntAccusation)
+                .isTraitor(isTraitor)
                 .equipmentDTOList(equipments.stream()
                         .map(equipment -> equipment.toDto()).collect(Collectors.toList()))
                 .lastLocalization(localizations.get(localizations.size()-1).toDto()) //Repensar a obtencao do indice
@@ -58,5 +63,7 @@ public class Rebel {
         localizations = rebelRequest.getLocalizationRequestList()
                 .stream().map(localization -> new Localization(localization,this))
                 .collect(Collectors.toList());
+        qntAccusation = 0;
+        isTraitor = false;
     }
 }

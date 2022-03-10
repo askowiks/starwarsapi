@@ -1,7 +1,6 @@
 package com.letscode.starwarsapi.services;
 
-import com.letscode.starwarsapi.models.Rebel;
-import com.letscode.starwarsapi.models.RebelRequest;
+import com.letscode.starwarsapi.models.*;
 import com.letscode.starwarsapi.repositories.RebelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,5 +32,23 @@ public class RebelsService {
 
     public void deleteRebel(Long id) {
         rebelsRepository.deleteById(id);
+    }
+
+    public RebelDTO accuseTraitor(Long id){
+        Rebel rebel = findRebelById(id);
+        int newQntAccusation = rebel.getQntAccusation() + 1;
+        if (newQntAccusation >= 3) rebel.setIsTraitor(true);
+        rebel.setQntAccusation(newQntAccusation);
+        rebelsRepository.save(rebel);
+        RebelDTO rebelDTO = rebel.toDto();
+        return rebelDTO;
+    }
+
+    public Rebel update(Long id, LocalizationRequest localizationRequest){
+        Rebel rebelById = findRebelById(id);
+        List<Localization> localizations = rebelById.getLocalizations();
+        Localization newLocalizatio = new Localization(localizationRequest,rebelById);
+        // ...
+        return rebelById;
     }
 }

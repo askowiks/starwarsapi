@@ -1,5 +1,6 @@
 package com.letscode.starwarsapi.controllers;
 
+import com.letscode.starwarsapi.models.LocalizationRequest;
 import com.letscode.starwarsapi.models.Rebel;
 import com.letscode.starwarsapi.models.RebelDTO;
 import com.letscode.starwarsapi.models.RebelRequest;
@@ -44,5 +45,24 @@ public class RebelsController {
         rebelsService.deleteRebel(id);
     }
 
+    @PatchMapping(value = "/{id}/accusation")
+    public String accuseRebel(@PathVariable("id") Long id){
+        RebelDTO rebelDTO = rebelsService.accuseTraitor(id);
+        String mensageIsTraitor;
+        if(rebelDTO.getIsTraitor() == true){
+            mensageIsTraitor = " é um traidor!!!";
+        }else{
+            mensageIsTraitor = " não é um traidor!";
+        }
+        String mensage = "O rebelde " + rebelDTO.getName() + " recebeu uma acusação de ser traidor, agora ele possui "
+                + rebelDTO.getQntAccusation() +" acusações. O rebelde " + rebelDTO.getName() + mensageIsTraitor;
+        return mensage;
+    }
+
+    @PutMapping (value = "/{id}/update")
+    public RebelDTO update(@PathVariable Long id,@RequestBody LocalizationRequest localizationRequest){
+        Rebel updateRebelde = rebelsService.update(id, localizationRequest);
+        return updateRebelde.toDto();
+    }
     //Metodo Patch
 }

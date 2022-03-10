@@ -19,6 +19,9 @@ public class RebelDTO {
     private Integer age;
     private String gender;
 
+    private Integer qntAccusation;
+    private Boolean isTraitor;
+
     List<EquipmentDTO> equipmentDTOList = new ArrayList<>();
 
     private LocalizationDTO lastLocalization;
