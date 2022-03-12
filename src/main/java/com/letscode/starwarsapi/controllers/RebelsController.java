@@ -7,6 +7,7 @@ import com.letscode.starwarsapi.services.RebelsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class RebelsController {
     }
 
     @PostMapping
-    public RebelDTO createRebel(@RequestBody RebelRequest rebelRequest){
+    public RebelDTO createRebel(@Valid @RequestBody RebelRequest rebelRequest){
         Rebel rebel = rebelsService.createRebel(rebelRequest);
         RebelDTO rebelDTO = rebel.toDto();
         return rebelDTO;
@@ -58,7 +59,7 @@ public class RebelsController {
     }
 
     @PutMapping (value = "/{id}/update")
-    public RebelDTO updateLocalization(@PathVariable Long id,@RequestBody LocalizationRequest localizationRequest){
+    public RebelDTO updateLocalization(@PathVariable Long id,@Valid @RequestBody LocalizationRequest localizationRequest){
         Rebel updateRebel = rebelsService.updateLocalization(id,localizationRequest);
         return updateRebel.toDto();
     }
