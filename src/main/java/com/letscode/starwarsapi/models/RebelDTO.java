@@ -22,8 +22,10 @@ public class RebelDTO {
     private Integer qntAccusation;
     private Boolean isTraitor;
 
-    List<EquipmentDTO> equipmentDTOList = new ArrayList<>();
+    List<EquipmentDTO> equipmentList = new ArrayList<>();
 
     private LocalizationDTO lastLocalization;
+
+    private Integer points;
 
 }

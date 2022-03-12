@@ -33,6 +33,8 @@ public class Rebel {
     @OneToMany(mappedBy = "rebelLocalization", cascade = CascadeType.ALL)
     List<Localization> localizations;
 
+    private Integer rebelPoints;
+
     public static Rebel of(RebelRequest rebelRequest){
         Rebel rebel = new Rebel();
         BeanUtils.copyProperties(rebelRequest,rebel);
@@ -47,9 +49,10 @@ public class Rebel {
                 .gender(gender)
                 .qntAccusation(qntAccusation)
                 .isTraitor(isTraitor)
-                .equipmentDTOList(equipments.stream()
+                .equipmentList(equipments.stream()
                         .map(equipment -> equipment.toDto()).collect(Collectors.toList()))
                 .lastLocalization(localizations.get(localizations.size()-1).toDto()) //Repensar a obtencao do indice
+                .points(rebelPoints)
                 .build();
     }
 
@@ -65,5 +68,6 @@ public class Rebel {
                 .collect(Collectors.toList());
         qntAccusation = 0;
         isTraitor = false;
+        rebelPoints = equipments.stream().mapToInt(equipment -> equipment.getPoints()).sum(); //o calculo esta sendo feito somente quando é criado e não é refeito quando é atualizado
     }
 }

@@ -21,6 +21,7 @@ public class Equipment {
 
     private String name;
     private Integer quantity;
+    private Integer points;      //So esta sendo calculado quando utilizado o construtor
 
     @ManyToOne
     @JsonIgnore
@@ -38,12 +39,14 @@ public class Equipment {
                 .id(id)
                 .name(name)
                 .quantity(quantity)
+                .points(points)
                 .build();
     }
 
     public Equipment(EquipmentRequest equipmentRequest, Rebel rebel){
-        name = equipmentRequest.getName();
+        name = EquipmentsEnum.valueOf(equipmentRequest.getName().toUpperCase()).getName();   // Caso não exista o enum vai ter que tratar um IllegalArgumentException
         quantity = equipmentRequest.getQuantity();
         this.rebel = rebel;
+        points = quantity* EquipmentsEnum.valueOf(equipmentRequest.getName().toUpperCase()).getEquipmentPoints();
     }
 }

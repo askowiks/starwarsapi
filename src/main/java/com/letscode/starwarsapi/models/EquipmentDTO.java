@@ -14,4 +14,5 @@ public class EquipmentDTO {
     private Long id;
     private String name;
     private Integer quantity;
+    private Integer points;
 }
