@@ -1,4 +1,4 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

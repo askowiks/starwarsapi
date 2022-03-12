@@ -1,5 +1,7 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.models.dto;
 
+import com.letscode.starwarsapi.models.dto.EquipmentDTO;
+import com.letscode.starwarsapi.models.dto.LocalizationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

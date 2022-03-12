@@ -1,5 +1,7 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.models.entities;
 
+import com.letscode.starwarsapi.models.dto.RebelDTO;
+import com.letscode.starwarsapi.models.RebelRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

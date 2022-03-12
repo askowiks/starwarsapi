@@ -1,6 +1,8 @@
 package com.letscode.starwarsapi.controllers;
 
 import com.letscode.starwarsapi.models.*;
+import com.letscode.starwarsapi.models.dto.RebelDTO;
+import com.letscode.starwarsapi.models.entities.Rebel;
 import com.letscode.starwarsapi.services.RebelsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

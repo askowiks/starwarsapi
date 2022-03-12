@@ -1,6 +1,9 @@
 package com.letscode.starwarsapi.services;
 
 import com.letscode.starwarsapi.models.*;
+import com.letscode.starwarsapi.models.dto.RebelDTO;
+import com.letscode.starwarsapi.models.entities.Localization;
+import com.letscode.starwarsapi.models.entities.Rebel;
 import com.letscode.starwarsapi.repositories.EquipmentRepository;
 import com.letscode.starwarsapi.repositories.LocalizationRepository;
 import com.letscode.starwarsapi.repositories.RebelsRepository;

@@ -1,6 +1,8 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.letscode.starwarsapi.models.dto.LocalizationDTO;
+import com.letscode.starwarsapi.models.LocalizationRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,10 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.letscode.starwarsapi.models.dto.EquipmentDTO;
+import com.letscode.starwarsapi.models.EquipmentRequest;
+import com.letscode.starwarsapi.enums.EquipmentsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +37,7 @@ public class Equipment {
         return equipment;
     }
 
-    public  EquipmentDTO toDto(){
+    public EquipmentDTO toDto(){
         return EquipmentDTO.builder()
                 .id(id)
                 .name(name)

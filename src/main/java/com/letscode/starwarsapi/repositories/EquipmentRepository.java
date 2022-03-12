@@ -1,6 +1,6 @@
 package com.letscode.starwarsapi.repositories;
 
-import com.letscode.starwarsapi.models.Equipment;
+import com.letscode.starwarsapi.models.entities.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
