@@ -1,14 +1,10 @@
 package com.letscode.starwarsapi.controllers;
 
-import com.letscode.starwarsapi.models.LocalizationRequest;
-import com.letscode.starwarsapi.models.Rebel;
-import com.letscode.starwarsapi.models.RebelDTO;
-import com.letscode.starwarsapi.models.RebelRequest;
+import com.letscode.starwarsapi.models.*;
 import com.letscode.starwarsapi.services.RebelsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,9 +56,9 @@ public class RebelsController {
     }
 
     @PutMapping (value = "/{id}/update")
-    public RebelDTO update(@PathVariable Long id,@RequestBody LocalizationRequest localizationRequest){
-        Rebel updateRebelde = rebelsService.update(id, localizationRequest);
-        return updateRebelde.toDto();
+    public RebelDTO updateLocalization(@PathVariable Long id,@RequestBody LocalizationRequest localizationRequest){
+        Rebel updateRebel = rebelsService.updateLocalization(id,localizationRequest);
+        return updateRebel.toDto();
     }
     //Metodo Patch
 }

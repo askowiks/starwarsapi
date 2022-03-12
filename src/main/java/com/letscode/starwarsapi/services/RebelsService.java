@@ -1,6 +1,8 @@
 package com.letscode.starwarsapi.services;
 
 import com.letscode.starwarsapi.models.*;
+import com.letscode.starwarsapi.repositories.EquipmentRepository;
+import com.letscode.starwarsapi.repositories.LocalizationRepository;
 import com.letscode.starwarsapi.repositories.RebelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,12 @@ public class RebelsService {
 
     @Autowired
     private RebelsRepository rebelsRepository;
+
+    @Autowired
+    private EquipmentRepository equipmentRepository;
+
+    @Autowired
+    private LocalizationRepository localizationRepository;
 
     public List<Rebel> getAllRebels(){
         return rebelsRepository.findAll();
@@ -44,11 +52,24 @@ public class RebelsService {
         return rebelDTO;
     }
 
-    public Rebel update(Long id, LocalizationRequest localizationRequest){
-        Rebel rebelById = findRebelById(id);
-        List<Localization> localizations = rebelById.getLocalizations();
-        Localization newLocalizatio = new Localization(localizationRequest,rebelById);
-        // ...
-        return rebelById;
+    public Rebel updateLocalization(Long id, LocalizationRequest localizationRequest){
+//        -> funciona alterando a localização atual do rebelde, mas não funciona com listra de posição;
+//        Rebel rebelById = findRebelById(id);
+//        Localization localizationById = localizationRepository.findById(id).get();
+//        List<Localization> localizations = rebelById.getLocalizations();
+//        Localization newLocalization = new Localization(localizationRequest,rebelById);
+//        rebelById.setLocalizations(localizations);
+//        localizationById.setLongitude(newLocalization.getLongitude());
+//        localizationById.setLatitude(newLocalization.getLatitude());
+//        localizationById.setName(newLocalization.getName());
+//        localizationRepository.save(localizationById);
+//        RebelDTO rebelDTO = rebelById.toDto();
+//        return rebelById;
+
+//        - alternativa
+        Rebel rebel = findRebelById(id);
+        Localization newLocalizatio = new Localization(localizationRequest,rebel);
+        localizationRepository.save(newLocalizatio);
+        return rebel;
     }
 }
