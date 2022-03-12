@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocalizationRequest {
+public class LocalizationRequestDTO {
 
     @NotNull(message = "latitude ")
     private Integer latitude;

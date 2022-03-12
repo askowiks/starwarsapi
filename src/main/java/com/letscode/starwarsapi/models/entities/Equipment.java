@@ -3,7 +3,7 @@ package com.letscode.starwarsapi.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.letscode.starwarsapi.models.dto.EquipmentDTO;
-import com.letscode.starwarsapi.models.EquipmentRequest;
+import com.letscode.starwarsapi.models.EquipmentRequestDTO;
 import com.letscode.starwarsapi.enums.EquipmentsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ public class Equipment {
     @JoinColumn(name = "rebel_id",referencedColumnName = "id")
     private Rebel rebel;
 
-    public static Equipment of(EquipmentRequest equipmentRequest){
+    public static Equipment of(EquipmentRequestDTO equipmentRequest){
         Equipment equipment = new Equipment();
         BeanUtils.copyProperties(equipmentRequest,equipment);
         return equipment;
@@ -46,7 +46,7 @@ public class Equipment {
                 .build();
     }
 
-    public Equipment(EquipmentRequest equipmentRequest, Rebel rebel){
+    public Equipment(EquipmentRequestDTO equipmentRequest, Rebel rebel){
         name = EquipmentsEnum.valueOf(equipmentRequest.getName().toUpperCase()).getName();   // Caso não exista o enum vai ter que tratar um IllegalArgumentException
         quantity = equipmentRequest.getQuantity();
         this.rebel = rebel;

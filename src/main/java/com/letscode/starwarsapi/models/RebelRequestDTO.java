@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RebelRequest {
+public class RebelRequestDTO {
 
     @NotBlank(message = "nome rebelde ")
     private String name;
@@ -25,9 +25,9 @@ public class RebelRequest {
     private String gender;
 
     @Valid
-    private List<EquipmentRequest> equipmentsRequest = new ArrayList<>();
+    private List<EquipmentRequestDTO> equipmentsRequest = new ArrayList<>();
 
     @Valid
     @NotNull(message = "eh necessario uma localizacao")
-    private List<LocalizationRequest> localizationRequestList;
+    private List<LocalizationRequestDTO> localizationRequestList;
 }

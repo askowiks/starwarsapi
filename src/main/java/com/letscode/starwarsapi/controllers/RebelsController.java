@@ -26,7 +26,7 @@ public class RebelsController {
     }
 
     @PostMapping
-    public RebelDTO createRebel(@Valid @RequestBody RebelRequest rebelRequest){
+    public RebelDTO createRebel(@Valid @RequestBody RebelRequestDTO rebelRequest){
         Rebel rebel = rebelsService.createRebel(rebelRequest);
         RebelDTO rebelDTO = rebel.toDto();
         return rebelDTO;
@@ -59,9 +59,14 @@ public class RebelsController {
     }
 
     @PutMapping (value = "/{id}/update")
-    public RebelDTO updateLocalization(@PathVariable Long id,@Valid @RequestBody LocalizationRequest localizationRequest){
+    public RebelDTO updateLocalization(@PathVariable Long id,@Valid @RequestBody LocalizationRequestDTO localizationRequest){
         Rebel updateRebel = rebelsService.updateLocalization(id,localizationRequest);
         return updateRebel.toDto();
     }
     //Metodo Patch
+
+    @GetMapping(value = "/report")
+    public ReportResponseDTO report(){
+        return rebelsService.createReport();
+    }
 }

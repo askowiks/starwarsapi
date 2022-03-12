@@ -2,7 +2,7 @@ package com.letscode.starwarsapi.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.letscode.starwarsapi.models.dto.LocalizationDTO;
-import com.letscode.starwarsapi.models.LocalizationRequest;
+import com.letscode.starwarsapi.models.LocalizationRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class Localization {
     @JoinColumn(name = "rebel_id", referencedColumnName = "id")
     private Rebel rebelLocalization;
 
-    public static Localization of(LocalizationRequest localizationRequest){
+    public static Localization of(LocalizationRequestDTO localizationRequest){
         Localization localization = new Localization();
         BeanUtils.copyProperties(localizationRequest,localization);
         return localization;
@@ -44,7 +44,7 @@ public class Localization {
                 .build();
     }
 
-    public Localization(LocalizationRequest localizationRequest, Rebel rebel){
+    public Localization(LocalizationRequestDTO localizationRequest, Rebel rebel){
         latitude = localizationRequest.getLatitude();
         longitude = localizationRequest.getLongitude();
         name = localizationRequest.getName();

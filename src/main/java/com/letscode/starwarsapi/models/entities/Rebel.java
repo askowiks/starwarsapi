@@ -1,7 +1,7 @@
 package com.letscode.starwarsapi.models.entities;
 
 import com.letscode.starwarsapi.models.dto.RebelDTO;
-import com.letscode.starwarsapi.models.RebelRequest;
+import com.letscode.starwarsapi.models.RebelRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,7 +37,7 @@ public class Rebel {
 
     private Integer rebelPoints;
 
-    public static Rebel of(RebelRequest rebelRequest){
+    public static Rebel of(RebelRequestDTO rebelRequest){
         Rebel rebel = new Rebel();
         BeanUtils.copyProperties(rebelRequest,rebel);
         return rebel;
@@ -58,7 +58,7 @@ public class Rebel {
                 .build();
     }
 
-    public Rebel(RebelRequest rebelRequest){
+    public Rebel(RebelRequestDTO rebelRequest){
         name = rebelRequest.getName();
         age = rebelRequest.getAge();
         gender = rebelRequest.getGender();

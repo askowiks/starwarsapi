@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EquipmentRequest {
+public class EquipmentRequestDTO {
 
     @NotBlank(message = "nome equipment ")
     private String name;
