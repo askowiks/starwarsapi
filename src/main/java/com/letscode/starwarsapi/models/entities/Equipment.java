@@ -2,8 +2,8 @@ package com.letscode.starwarsapi.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.letscode.starwarsapi.models.dto.EquipmentDTO;
-import com.letscode.starwarsapi.models.EquipmentRequestDTO;
+import com.letscode.starwarsapi.dto.EquipmentDTO;
+import com.letscode.starwarsapi.dto.EquipmentRequestDTO;
 import com.letscode.starwarsapi.enums.EquipmentsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;

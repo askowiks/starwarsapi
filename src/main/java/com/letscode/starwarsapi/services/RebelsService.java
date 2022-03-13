@@ -1,7 +1,6 @@
 package com.letscode.starwarsapi.services;
 
-import com.letscode.starwarsapi.models.*;
-import com.letscode.starwarsapi.models.dto.RebelDTO;
+import com.letscode.starwarsapi.dto.*;
 import com.letscode.starwarsapi.models.entities.Equipment;
 import com.letscode.starwarsapi.models.entities.Localization;
 import com.letscode.starwarsapi.models.entities.Rebel;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RebelsService {
@@ -145,4 +145,64 @@ public class RebelsService {
 
         return reportResponseDTO;
     }
+
+    public String changeEquipments(TradeEquipmentsDTO tradeEquipmentsDTO){
+        // tem o rebelde
+        Long idRebel1 = tradeEquipmentsDTO.getRebel1().getId();
+        Long idRebel2 = tradeEquipmentsDTO.getRebel2().getId();
+        Rebel rebel1ById = findRebelById(idRebel1);
+        Rebel rebel2ById = findRebelById(idRebel2);
+        if(rebel1ById==null || rebel2ById == null) return "Algum dos rebeldes nao existe";
+
+        // tem traidor
+        if(rebel1ById.getIsTraitor()== true || rebel2ById.getIsTraitor()== true){
+            return "pelo menos um dos rebeldes é um traidor";
+        }
+
+        // se tem o equipamento
+        boolean rebels1ContainsEquipment = false;
+        List<String> nomesEquipamentosTroca = tradeEquipmentsDTO.getRebel1().getEquipmentRequestDTOList().stream()
+                .map(equipmentRequestDTO -> equipmentRequestDTO.getName()).collect(Collectors.toList());
+        List<String> listaNomeEquipamentosRebelde1 = rebel1ById.getEquipments().stream()
+                .map(Equipment::getName).collect(Collectors.toList());
+        for (String nome : nomesEquipamentosTroca) {
+            rebels1ContainsEquipment = listaNomeEquipamentosRebelde1.contains(nome);
+        }
+
+        boolean rebels2ContainsEquipment = false;
+        List<String> nomesEquipamentosTroca2 = tradeEquipmentsDTO.getRebel2().getEquipmentRequestDTOList().stream()
+                .map(equipmentRequestDTO -> equipmentRequestDTO.getName()).collect(Collectors.toList());
+        List<String> listaNomeEquipamentosRebelde2 = rebel2ById.getEquipments().stream()
+                .map(Equipment::getName).collect(Collectors.toList());
+        for (String nome : nomesEquipamentosTroca2) {
+            rebels2ContainsEquipment = listaNomeEquipamentosRebelde2.contains(nome);
+        }
+
+       String resposta = " ";
+        String resposta2 = " ";
+        if (rebels1ContainsEquipment == true && rebels2ContainsEquipment == true){
+            resposta = "deu certo";
+        }else{
+            resposta = "Deu ruim";
+        }
+//        return resposta;
+
+        // se tem a quantidade
+            //equipamento do rebelde >= equipamento qu quer ser trocaddo
+
+        // pontuacao
+        int pointsRebel1 = tradeEquipmentsDTO.getRebel1().getEquipmentRequestDTOList().stream().map(equipmentRequestDTO -> equipmentRequestDTO.toTrade()).collect(Collectors.toList()).stream().mapToInt(equipmentToTrade -> equipmentToTrade.getPoints()).sum();
+        int pointsRebel2 = tradeEquipmentsDTO.getRebel2().getEquipmentRequestDTOList().stream().map(equipmentRequestDTO -> equipmentRequestDTO.toTrade()).collect(Collectors.toList()).stream().mapToInt(equipmentToTrade -> equipmentToTrade.getPoints()).sum();
+        int diferenca = pointsRebel1 - pointsRebel2;
+
+        if(diferenca==0){
+            resposta2 = "a troca pode ser feita";
+        }else{
+            resposta2 = "a diferenca de pontuacao eh " + diferenca;
+        }
+
+        return resposta+resposta2;
+    }
+
+
 }

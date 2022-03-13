@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public enum EquipmentsEnum {
-    ARMA("Weapon",4),
-    MUNICAO("Ammunition", 3),
-    AGUA("Water", 2),
-    COMIDA("Food", 1);
+    ARMA("arma",4),
+    MUNICAO("municao", 3),
+    AGUA("agua", 2),
+    COMIDA("comida", 1);
 
     private String name;
     private Integer equipmentPoints;

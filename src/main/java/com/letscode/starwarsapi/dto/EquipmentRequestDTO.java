@@ -1,5 +1,6 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.dto;
 
+import com.letscode.starwarsapi.enums.EquipmentsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,13 @@ public class EquipmentRequestDTO {
     @NotNull(message = "quantidade equipment ")
     @Min(value = 1,message = "a quantidade de itens tem que ser pelo menos 1")
     private Integer quantity;
+
+    public EquipmentToTrade toTrade(){
+        return EquipmentToTrade.builder()
+                .name(name)
+                .quantity(quantity)
+                .points(quantity* EquipmentsEnum.valueOf(name.toUpperCase()).getEquipmentPoints())
+                .build();
+    }
 
 }

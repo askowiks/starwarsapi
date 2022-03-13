@@ -1,10 +1,11 @@
 package com.letscode.starwarsapi.controllers;
 
-import com.letscode.starwarsapi.models.*;
-import com.letscode.starwarsapi.models.dto.RebelDTO;
+import com.letscode.starwarsapi.dto.*;
 import com.letscode.starwarsapi.models.entities.Rebel;
 import com.letscode.starwarsapi.services.RebelsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,10 +34,13 @@ public class RebelsController {
     }
 
     @GetMapping(value = "/{id}")
-    public RebelDTO findRebelById(@PathVariable("id") Long id){
+    public ResponseEntity<?> findRebelById(@PathVariable("id") Long id){
         Rebel rebel = rebelsService.findRebelById(id);
+        if (rebel==null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não existe rebelde com esse id "+ id);
+        }
         RebelDTO rebelDTO = rebel.toDto();
-        return rebelDTO;
+        return ResponseEntity.ok(rebelDTO);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -68,5 +72,10 @@ public class RebelsController {
     @GetMapping(value = "/report")
     public ReportResponseDTO report(){
         return rebelsService.createReport();
+    }
+
+    @PutMapping(value = "/trade")
+    public String trade(@RequestBody TradeEquipmentsDTO tradeEquipmentsDTO){
+        return rebelsService.changeEquipments(tradeEquipmentsDTO);
     }
 }

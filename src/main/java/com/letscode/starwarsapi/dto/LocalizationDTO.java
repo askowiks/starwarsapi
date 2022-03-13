@@ -1,4 +1,4 @@
-package com.letscode.starwarsapi.models.dto;
+package com.letscode.starwarsapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EquipmentDTO {
+public class LocalizationDTO {
 
     private Long id;
+    private Integer latitude;
+    private Integer longitude;
     private String name;
-    private Integer quantity;
-    private Integer points;
 }

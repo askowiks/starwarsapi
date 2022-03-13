@@ -1,4 +1,4 @@
-package com.letscode.starwarsapi.models;
+package com.letscode.starwarsapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
