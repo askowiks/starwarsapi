@@ -4,6 +4,7 @@ package com.letscode.starwarsapi.models.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.letscode.starwarsapi.dto.EquipmentDTO;
 import com.letscode.starwarsapi.dto.EquipmentRequestDTO;
+import com.letscode.starwarsapi.dto.EquipmentToTrade;
 import com.letscode.starwarsapi.enums.EquipmentsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,9 +48,16 @@ public class Equipment {
     }
 
     public Equipment(EquipmentRequestDTO equipmentRequest, Rebel rebel){
-        name = EquipmentsEnum.valueOf(equipmentRequest.getName().toUpperCase()).getName();   // Caso não exista o enum vai ter que tratar um IllegalArgumentException
+        name = EquipmentsEnum.getName(equipmentRequest.getName());   // Caso não exista o enum vai ter que tratar um IllegalArgumentException
         quantity = equipmentRequest.getQuantity();
         this.rebel = rebel;
-        points = quantity* EquipmentsEnum.valueOf(equipmentRequest.getName().toUpperCase()).getEquipmentPoints();
+        points = quantity* EquipmentsEnum.getPoints(equipmentRequest.getName());
+    }
+
+    public Equipment(EquipmentToTrade equipmentequipmentToTrade, Rebel rebel){
+        name = EquipmentsEnum.getName(equipmentequipmentToTrade.getName());   // Caso não exista o enum vai ter que tratar um IllegalArgumentException
+        quantity = equipmentequipmentToTrade.getQuantity();
+        this.rebel = rebel;
+        points = quantity* EquipmentsEnum.getPoints(equipmentequipmentToTrade.getName());
     }
 }

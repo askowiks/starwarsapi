@@ -1,6 +1,7 @@
 package com.letscode.starwarsapi.services;
 
 import com.letscode.starwarsapi.dto.*;
+import com.letscode.starwarsapi.enums.EquipmentsEnum;
 import com.letscode.starwarsapi.models.entities.Equipment;
 import com.letscode.starwarsapi.models.entities.Localization;
 import com.letscode.starwarsapi.models.entities.Rebel;
@@ -146,62 +147,143 @@ public class RebelsService {
         return reportResponseDTO;
     }
 
-    public String changeEquipments(TradeEquipmentsDTO tradeEquipmentsDTO){
+    public Equipment findEquipment(List<Equipment> listEquipment, String name){
+        for (Equipment equipment : listEquipment) {
+            if (equipment.getName() == name) return equipment;
+        }
+        return null;
+    }
+
+
+    public boolean verifyNameAndQuantity(List<EquipmentToTrade> equipmentToTradeList, List<Equipment> equipmentListRebelToGive){
+        boolean PossuiEquipamento = false;
+        boolean PossuiQuantidade = true;
+
+        for (EquipmentToTrade equipmentToTrade : equipmentToTradeList) {
+            Equipment equipment = findEquipment(equipmentListRebelToGive, equipmentToTrade.getName());
+
+            if(equipment == null){
+                PossuiEquipamento = false;
+            }else{
+                PossuiEquipamento = true;
+
+                int newQuantity = equipment.getQuantity() - equipmentToTrade.getQuantity();
+                if (newQuantity < 0) PossuiQuantidade = false;
+            }
+        }
+
+        if(PossuiQuantidade == false || PossuiEquipamento==false) return false;
+        return true;
+    }
+
+    public int verifyPoints(List<EquipmentToTrade> equipmentToTradeList1, List<EquipmentToTrade> equipmentToTradeList2){
+        int pointsRebel1 = equipmentToTradeList1.stream()
+                .mapToInt(equipmentToTrade -> equipmentToTrade.getPoints()).sum();
+
+        int pointsRebel2 = equipmentToTradeList2.stream()
+                .mapToInt(equipmentToTrade -> equipmentToTrade.getPoints()).sum();
+
+        return pointsRebel1 - pointsRebel2;
+    }
+
+    public void tradeEquipment(Rebel rebelToReceive, List<EquipmentToTrade> equipmentToTradeList,
+                                 List<Equipment> equipmentListRebelToGive){
+
+        for (EquipmentToTrade equipmentToTrade : equipmentToTradeList) {
+            Equipment equipment = findEquipment(equipmentListRebelToGive, equipmentToTrade.getName());
+
+            int newQuantity = equipment.getQuantity() - equipmentToTrade.getQuantity();
+            int newPoints = newQuantity * EquipmentsEnum.getPoints(equipment.getName());
+
+            equipment.setQuantity(newQuantity);
+            equipment.setPoints(newPoints);
+
+            Equipment newEquipmentRebel2 = new Equipment(equipmentToTrade,rebelToReceive);
+
+            equipmentRepository.save(equipment);
+            equipmentRepository.save(newEquipmentRebel2);
+        }
+    }
+
+    public String verifyConditions(Rebel rebel1,Rebel rebel2,
+                                 List<Equipment> equipmentsRebel1,
+                                 List<Equipment> equipmentsRebel2 ,
+                                 List<EquipmentToTrade> equipmentRequestToChangeRebel1,
+                                 List<EquipmentToTrade> equipmentRequestToChangeRebel2 ){
         // tem o rebelde
-        Long idRebel1 = tradeEquipmentsDTO.getRebel1().getId();
-        Long idRebel2 = tradeEquipmentsDTO.getRebel2().getId();
-        Rebel rebel1ById = findRebelById(idRebel1);
-        Rebel rebel2ById = findRebelById(idRebel2);
-        if(rebel1ById==null || rebel2ById == null) return "Algum dos rebeldes nao existe";
+        if(rebel1==null || rebel2 == null) return "Algum dos rebeldes nao existe";
 
         // tem traidor
-        if(rebel1ById.getIsTraitor()== true || rebel2ById.getIsTraitor()== true){
+        if(rebel1.getIsTraitor()== true || rebel2.getIsTraitor()== true){
             return "pelo menos um dos rebeldes é um traidor";
         }
 
-        // se tem o equipamento
-        boolean rebels1ContainsEquipment = false;
-        List<String> nomesEquipamentosTroca = tradeEquipmentsDTO.getRebel1().getEquipmentRequestDTOList().stream()
-                .map(equipmentRequestDTO -> equipmentRequestDTO.getName()).collect(Collectors.toList());
-        List<String> listaNomeEquipamentosRebelde1 = rebel1ById.getEquipments().stream()
-                .map(Equipment::getName).collect(Collectors.toList());
-        for (String nome : nomesEquipamentosTroca) {
-            rebels1ContainsEquipment = listaNomeEquipamentosRebelde1.contains(nome);
+        // se tem o equipamento e a quantiddade
+        boolean verifyConditions1 = verifyNameAndQuantity(equipmentRequestToChangeRebel1, equipmentsRebel1);
+        boolean verifyConditions2 = verifyNameAndQuantity(equipmentRequestToChangeRebel2, equipmentsRebel2);
+        if(verifyConditions1==false || verifyConditions2==false){
+            return "Não é possível realizar a troca! Os rebeldes não possuem o item selecionado ou quantidade suficiente deles.";
         }
-
-        boolean rebels2ContainsEquipment = false;
-        List<String> nomesEquipamentosTroca2 = tradeEquipmentsDTO.getRebel2().getEquipmentRequestDTOList().stream()
-                .map(equipmentRequestDTO -> equipmentRequestDTO.getName()).collect(Collectors.toList());
-        List<String> listaNomeEquipamentosRebelde2 = rebel2ById.getEquipments().stream()
-                .map(Equipment::getName).collect(Collectors.toList());
-        for (String nome : nomesEquipamentosTroca2) {
-            rebels2ContainsEquipment = listaNomeEquipamentosRebelde2.contains(nome);
-        }
-
-       String resposta = " ";
-        String resposta2 = " ";
-        if (rebels1ContainsEquipment == true && rebels2ContainsEquipment == true){
-            resposta = "deu certo";
-        }else{
-            resposta = "Deu ruim";
-        }
-//        return resposta;
-
-        // se tem a quantidade
-            //equipamento do rebelde >= equipamento qu quer ser trocaddo
 
         // pontuacao
-        int pointsRebel1 = tradeEquipmentsDTO.getRebel1().getEquipmentRequestDTOList().stream().map(equipmentRequestDTO -> equipmentRequestDTO.toTrade()).collect(Collectors.toList()).stream().mapToInt(equipmentToTrade -> equipmentToTrade.getPoints()).sum();
-        int pointsRebel2 = tradeEquipmentsDTO.getRebel2().getEquipmentRequestDTOList().stream().map(equipmentRequestDTO -> equipmentRequestDTO.toTrade()).collect(Collectors.toList()).stream().mapToInt(equipmentToTrade -> equipmentToTrade.getPoints()).sum();
-        int diferenca = pointsRebel1 - pointsRebel2;
-
-        if(diferenca==0){
-            resposta2 = "a troca pode ser feita";
-        }else{
-            resposta2 = "a diferenca de pontuacao eh " + diferenca;
+        int difference = verifyPoints(equipmentRequestToChangeRebel1,equipmentRequestToChangeRebel2);
+        if(difference != 0){
+            return "A troca não respeita a igualdade de pontuação. A diferença de pontos é: " + difference;
         }
 
-        return resposta+resposta2;
+        return "A troca atende a todos os requisitos.";
+    }
+
+    public String changeEquipments(TradeEquipmentsDTO tradeEquipmentsDTO){
+
+        List<EquipmentToTrade> equipmentRequestToChangeRebel1 = tradeEquipmentsDTO.getRebel1().getEquipmentRequestDTOList().stream().map(equipmentRequest -> equipmentRequest.toTrade()).collect(Collectors.toList());
+        List<EquipmentToTrade> equipmentRequestToChangeRebel2 = tradeEquipmentsDTO.getRebel2().getEquipmentRequestDTOList().stream().map(equipmentRequest -> equipmentRequest.toTrade()).collect(Collectors.toList());
+
+        Long idRebel1 = tradeEquipmentsDTO.getRebel1().getId();
+        Long idRebel2 = tradeEquipmentsDTO.getRebel2().getId();
+
+        Rebel rebel1 = findRebelById(idRebel1);
+        Rebel rebel2 = findRebelById(idRebel2);
+
+        List<Equipment> equipmentsRebel1 = rebel1.getEquipments();
+        List<Equipment> equipmentsRebel2 = rebel2.getEquipments();
+
+        String returnVerification = verifyConditions(rebel1, rebel2, equipmentsRebel1, equipmentsRebel2,
+                equipmentRequestToChangeRebel1, equipmentRequestToChangeRebel2);
+//
+//        // tem o rebelde
+//        if(rebel1==null || rebel2 == null) return "Algum dos rebeldes nao existe";
+//
+//        // tem traidor
+//        if(rebel1.getIsTraitor()== true || rebel2.getIsTraitor()== true){
+//            return "pelo menos um dos rebeldes é um traidor";
+//        }
+//
+//        // se tem o equipamento e a quantiddade
+//        boolean verifyConditions1 = verifyNameAndQuantity(equipmentRequestToChangeRebel1, equipmentsRebel1);
+//        boolean verifyConditions2 = verifyNameAndQuantity(equipmentRequestToChangeRebel2, equipmentsRebel2);
+//        if(verifyConditions1==false || verifyConditions2==false){
+//            return "Não é possível realizar a troca! Os rebeldes não possuem o item selecionado ou quantidade suficiente deles.";
+//        }
+//
+//        // pontuacao
+//        int difference = verifyPoints(equipmentRequestToChangeRebel1,equipmentRequestToChangeRebel2);
+//        if(difference != 0){
+//            return "A troca não respeita a igualdade de pontuação. A diferença de pontos é: " + difference;
+//        }
+
+        String answer = "";
+
+        if(returnVerification == "A troca atende a todos os requisitos."){
+            // Fazer a troca
+            tradeEquipment(rebel2,equipmentRequestToChangeRebel1,equipmentsRebel1);
+            tradeEquipment(rebel1,equipmentRequestToChangeRebel2,equipmentsRebel2);
+            answer = "A troca foi realizada com sucesso!!!";
+        }else{
+            answer = returnVerification;
+        }
+
+        return answer;
     }
 
 

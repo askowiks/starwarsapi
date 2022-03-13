@@ -23,9 +23,9 @@ public class EquipmentRequestDTO {
 
     public EquipmentToTrade toTrade(){
         return EquipmentToTrade.builder()
-                .name(name)
+                .name(EquipmentsEnum.getName(name))
                 .quantity(quantity)
-                .points(quantity* EquipmentsEnum.valueOf(name.toUpperCase()).getEquipmentPoints())
+                .points(quantity* EquipmentsEnum.getPoints(name))
                 .build();
     }
 

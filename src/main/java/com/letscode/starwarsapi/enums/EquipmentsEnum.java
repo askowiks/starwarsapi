@@ -8,11 +8,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public enum EquipmentsEnum {
-    ARMA("arma",4),
-    MUNICAO("municao", 3),
-    AGUA("agua", 2),
-    COMIDA("comida", 1);
+    ARMA("Arma",4),
+    MUNICAO("Municao", 3),
+    AGUA("Agua", 2),
+    COMIDA("Comida", 1);
 
-    private String name;
+    private String equipmentName;
     private Integer equipmentPoints;
+
+    public static String getName(String name){
+        return EquipmentsEnum.valueOf(name.toUpperCase()).getEquipmentName();
+    }
+
+    public static int getPoints(String name){
+        return EquipmentsEnum.valueOf(name.toUpperCase()).getEquipmentPoints();
+    }
 }
