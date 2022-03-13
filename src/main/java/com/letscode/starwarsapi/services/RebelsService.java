@@ -109,16 +109,16 @@ public class RebelsService {
 
         for (Rebel rebel : rebels) {
             for (Equipment equipment : rebel.getEquipments()) {
-                if(equipment.getName()=="Weapon"){
+                if(equipment.getName()=="Arma"){
                     quantityWeapon += equipment.getQuantity();
                 }
-                if(equipment.getName()=="Ammunition"){
+                if(equipment.getName()=="Municao"){
                     quantityAmmo += equipment.getQuantity();
                 }
-                if(equipment.getName()=="Water"){
+                if(equipment.getName()=="Agua"){
                     quantityWater += equipment.getQuantity();
                 }
-                if(equipment.getName()=="Food"){
+                if(equipment.getName()=="Comida"){
                     quantityFood += equipment.getQuantity();
                 }
             }
