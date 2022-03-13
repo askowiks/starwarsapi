@@ -58,21 +58,19 @@ public class RebelsService {
         return rebelDTO;
     }
 
-    public Rebel updateLocalization(Long id, LocalizationRequestDTO localizationRequest){
-//        -> funciona alterando a localização atual do rebelde, mas não funciona com listra de posição;
-//        Rebel rebelById = findRebelById(id);
-//        Localization localizationById = localizationRepository.findById(id).get();
-//        List<Localization> localizations = rebelById.getLocalizations();
-//        Localization newLocalization = new Localization(localizationRequest,rebelById);
-//        rebelById.setLocalizations(localizations);
-//        localizationById.setLongitude(newLocalization.getLongitude());
-//        localizationById.setLatitude(newLocalization.getLatitude());
-//        localizationById.setName(newLocalization.getName());
-//        localizationRepository.save(localizationById);
-//        RebelDTO rebelDTO = rebelById.toDto();
-//        return rebelById;
+    public String accuseMensage(RebelDTO rebelDTO){
+        String mensageIsTraitor;
+        if(rebelDTO.getIsTraitor() == true){
+            mensageIsTraitor = " é um traidor!!!";
+        }else{
+            mensageIsTraitor = " não é um traidor!";
+        }
+        String mensage = "O rebelde " + rebelDTO.getName() + " recebeu uma acusação de ser traidor, agora ele possui "
+                + rebelDTO.getQntAccusation() +" acusações. O rebelde " + rebelDTO.getName() + mensageIsTraitor;
+        return mensage;
+    }
 
-//        - alternativa
+    public Rebel updateLocalization(Long id, LocalizationRequestDTO localizationRequest){
         Rebel rebel = findRebelById(id);
         Localization newLocalizatio = new Localization(localizationRequest,rebel);
         localizationRepository.save(newLocalizatio);
@@ -187,7 +185,7 @@ public class RebelsService {
     }
 
     public void tradeEquipment(Rebel rebelToReceive, List<EquipmentToTrade> equipmentToTradeList,
-                                 List<Equipment> equipmentListRebelToGive){
+                                 List<Equipment> equipmentListRebelToGive, List<Equipment> equipmentListRebelToReceive){
 
         for (EquipmentToTrade equipmentToTrade : equipmentToTradeList) {
             Equipment equipment = findEquipment(equipmentListRebelToGive, equipmentToTrade.getName());
@@ -197,26 +195,26 @@ public class RebelsService {
 
             equipment.setQuantity(newQuantity);
             equipment.setPoints(newPoints);
-
-            Equipment newEquipmentRebel2 = new Equipment(equipmentToTrade,rebelToReceive);
-
             equipmentRepository.save(equipment);
+
+            Equipment newEquipmentRebel2 = findEquipment(equipmentListRebelToReceive, equipmentToTrade.getName());
+            if(newEquipmentRebel2==null){
+                newEquipmentRebel2 = new Equipment(equipmentToTrade,rebelToReceive);
+            }else{
+                int newQuantityEquipment = newEquipmentRebel2.getQuantity()+ equipmentToTrade.getQuantity();
+                int newPointsEquipment = newQuantityEquipment * EquipmentsEnum.getPoints(equipment.getName());
+                newEquipmentRebel2.setQuantity(newQuantityEquipment);
+                newEquipmentRebel2.setPoints(newPointsEquipment);
+            }
+
             equipmentRepository.save(newEquipmentRebel2);
         }
     }
 
-    public String verifyConditions(Rebel rebel1,Rebel rebel2,
-                                 List<Equipment> equipmentsRebel1,
+    public String verifyConditions(List<Equipment> equipmentsRebel1,
                                  List<Equipment> equipmentsRebel2 ,
                                  List<EquipmentToTrade> equipmentRequestToChangeRebel1,
                                  List<EquipmentToTrade> equipmentRequestToChangeRebel2 ){
-        // tem o rebelde
-        if(rebel1==null || rebel2 == null) return "Algum dos rebeldes nao existe";
-
-        // tem traidor
-        if(rebel1.getIsTraitor()== true || rebel2.getIsTraitor()== true){
-            return "pelo menos um dos rebeldes é um traidor";
-        }
 
         // se tem o equipamento e a quantiddade
         boolean verifyConditions1 = verifyNameAndQuantity(equipmentRequestToChangeRebel1, equipmentsRebel1);
@@ -245,45 +243,36 @@ public class RebelsService {
         Rebel rebel1 = findRebelById(idRebel1);
         Rebel rebel2 = findRebelById(idRebel2);
 
+        // tem o rebelde
+        if(rebel1==null || rebel2 == null) return "Algum dos rebeldes nao existe";
+
+        // tem traidor
+        if(rebel1.getIsTraitor()== true || rebel2.getIsTraitor()== true){
+            return "pelo menos um dos rebeldes é um traidor";
+        }
+
         List<Equipment> equipmentsRebel1 = rebel1.getEquipments();
         List<Equipment> equipmentsRebel2 = rebel2.getEquipments();
 
-        String returnVerification = verifyConditions(rebel1, rebel2, equipmentsRebel1, equipmentsRebel2,
+        String returnVerification = verifyConditions(equipmentsRebel1, equipmentsRebel2,
                 equipmentRequestToChangeRebel1, equipmentRequestToChangeRebel2);
-//
-//        // tem o rebelde
-//        if(rebel1==null || rebel2 == null) return "Algum dos rebeldes nao existe";
-//
-//        // tem traidor
-//        if(rebel1.getIsTraitor()== true || rebel2.getIsTraitor()== true){
-//            return "pelo menos um dos rebeldes é um traidor";
-//        }
-//
-//        // se tem o equipamento e a quantiddade
-//        boolean verifyConditions1 = verifyNameAndQuantity(equipmentRequestToChangeRebel1, equipmentsRebel1);
-//        boolean verifyConditions2 = verifyNameAndQuantity(equipmentRequestToChangeRebel2, equipmentsRebel2);
-//        if(verifyConditions1==false || verifyConditions2==false){
-//            return "Não é possível realizar a troca! Os rebeldes não possuem o item selecionado ou quantidade suficiente deles.";
-//        }
-//
-//        // pontuacao
-//        int difference = verifyPoints(equipmentRequestToChangeRebel1,equipmentRequestToChangeRebel2);
-//        if(difference != 0){
-//            return "A troca não respeita a igualdade de pontuação. A diferença de pontos é: " + difference;
-//        }
 
         String answer = "";
 
         if(returnVerification == "A troca atende a todos os requisitos."){
             // Fazer a troca
-            tradeEquipment(rebel2,equipmentRequestToChangeRebel1,equipmentsRebel1);
-            tradeEquipment(rebel1,equipmentRequestToChangeRebel2,equipmentsRebel2);
+            tradeEquipment(rebel2,equipmentRequestToChangeRebel1,equipmentsRebel1,equipmentsRebel2);
+            tradeEquipment(rebel1,equipmentRequestToChangeRebel2,equipmentsRebel2, equipmentsRebel1);
             answer = "A troca foi realizada com sucesso!!!";
         }else{
             answer = returnVerification;
         }
 
         return answer;
+    }
+
+    public void deleteEquipment(Long id){
+        equipmentRepository.deleteById(id);
     }
 
 

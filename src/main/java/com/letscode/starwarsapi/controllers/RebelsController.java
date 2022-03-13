@@ -51,15 +51,7 @@ public class RebelsController {
     @PatchMapping(value = "/{id}/accusation")
     public String accuseRebel(@PathVariable("id") Long id){
         RebelDTO rebelDTO = rebelsService.accuseTraitor(id);
-        String mensageIsTraitor;
-        if(rebelDTO.getIsTraitor() == true){
-            mensageIsTraitor = " é um traidor!!!";
-        }else{
-            mensageIsTraitor = " não é um traidor!";
-        }
-        String mensage = "O rebelde " + rebelDTO.getName() + " recebeu uma acusação de ser traidor, agora ele possui "
-                + rebelDTO.getQntAccusation() +" acusações. O rebelde " + rebelDTO.getName() + mensageIsTraitor;
-        return mensage;
+        return rebelsService.accuseMensage(rebelDTO);
     }
 
     @PutMapping (value = "/{id}/update")
@@ -67,7 +59,6 @@ public class RebelsController {
         Rebel updateRebel = rebelsService.updateLocalization(id,localizationRequest);
         return updateRebel.toDto();
     }
-    //Metodo Patch
 
     @GetMapping(value = "/report")
     public ReportResponseDTO report(){
@@ -77,5 +68,10 @@ public class RebelsController {
     @PutMapping(value = "/trade")
     public String trade(@RequestBody TradeEquipmentsDTO tradeEquipmentsDTO){
         return rebelsService.changeEquipments(tradeEquipmentsDTO);
+    }
+
+    @DeleteMapping(value = "/deleteEquipment/{id}")
+    public void deleteEquipment(@PathVariable("id") Long id){
+        rebelsService.deleteEquipment(id);
     }
 }
